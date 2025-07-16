@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "clusterName": {
+      "value": "aks-minimal-arm"
+    },
+    "environment": {
+      "value": "dev"
+    },
+    "kubernetesVersion": {
+      "value": "1.28.3"
+    },
+    "nodeVmSize": {
+      "value": "Standard_B2s"
+    },
+    "nodeCount": {
+      "value": 1
+    }
+  }
+}

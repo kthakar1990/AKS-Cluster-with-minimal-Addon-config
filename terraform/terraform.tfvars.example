@@ -1,0 +1,39 @@
+# Terraform variable values for minimal spec AKS deployment
+# Copy this file to terraform.tfvars and customize the values as needed
+
+# Basic cluster configuration
+cluster_name        = "aks-minimal-demo"
+resource_group_name = "rg-minimal-aks-demo"
+location           = "East US"
+
+# Kubernetes configuration
+kubernetes_version = "1.28.3"
+dns_prefix        = ""  # Will default to cluster_name if empty
+
+# Node pool configuration (minimal spec)
+node_vm_size   = "Standard_B2s"  # Cost-optimized VM size
+node_count     = 1               # Minimal number of nodes
+
+# Auto-scaling (disabled by default for cost control)
+enable_auto_scaling = false
+min_node_count     = 1
+max_node_count     = 3
+
+# Network configuration
+pod_cidr        = "10.244.0.0/16"
+service_cidr    = "10.0.0.0/16"
+dns_service_ip  = "10.0.0.10"
+
+# Environment and tagging
+environment        = "dev"
+log_retention_days = 30
+
+# Additional custom tags (optional)
+additional_tags = {
+  project     = "minimal-aks-demo"
+  cost_center = "engineering"
+  owner       = "platform-team"
+}
+
+# Output configuration
+output_sensitive_values = false

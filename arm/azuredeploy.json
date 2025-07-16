@@ -1,0 +1,273 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "Minimal Spec AKS Cluster ARM Template - Cost-optimized AKS deployment",
+    "author": "Azure AKS Team"
+  },
+  "parameters": {
+    "clusterName": {
+      "type": "string",
+      "defaultValue": "[concat('aks-minimal-', uniqueString(resourceGroup().id))]",
+      "minLength": 3,
+      "maxLength": 63,
+      "metadata": {
+        "description": "Unique name for the AKS cluster"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Azure region for resource deployment"
+      }
+    },
+    "dnsPrefix": {
+      "type": "string",
+      "defaultValue": "[parameters('clusterName')]",
+      "metadata": {
+        "description": "DNS prefix for the AKS cluster"
+      }
+    },
+    "kubernetesVersion": {
+      "type": "string",
+      "defaultValue": "1.28.3",
+      "metadata": {
+        "description": "Kubernetes version for the cluster"
+      }
+    },
+    "nodeVmSize": {
+      "type": "string",
+      "defaultValue": "Standard_B2s",
+      "allowedValues": [
+        "Standard_B2s",
+        "Standard_DS2_v2",
+        "Standard_D2s_v3"
+      ],
+      "metadata": {
+        "description": "VM size for the default node pool (minimal spec: Standard_B2s)"
+      }
+    },
+    "nodeCount": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "maxValue": 3,
+      "metadata": {
+        "description": "Number of nodes in the default pool (minimal: 1)"
+      }
+    },
+    "environment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": [
+        "dev",
+        "test",
+        "staging",
+        "prod"
+      ],
+      "metadata": {
+        "description": "Environment tag for resource organization"
+      }
+    }
+  },
+  "variables": {
+    "resourceToken": "[toLower(uniqueString(subscription().id, resourceGroup().id, parameters('location')))]",
+    "tags": {
+      "environment": "[parameters('environment')]",
+      "azd-env-name": "[parameters('environment')]",
+      "purpose": "minimal-aks-cluster",
+      "costOptimized": "true",
+      "createdBy": "arm-template"
+    },
+    "managedIdentityName": "[concat('id-', parameters('clusterName'), '-', variables('resourceToken'))]",
+    "logAnalyticsName": "[concat('log-', parameters('clusterName'), '-', variables('resourceToken'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+      "apiVersion": "2023-01-31",
+      "name": "[variables('managedIdentityName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('tags')]"
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2023-09-01",
+      "name": "[variables('logAnalyticsName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('tags')]",
+      "properties": {
+        "sku": {
+          "name": "PerGB2018"
+        },
+        "retentionInDays": 30,
+        "features": {
+          "enableLogAccessUsingOnlyResourcePermissions": true
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ContainerService/managedClusters",
+      "apiVersion": "2024-09-01",
+      "name": "[parameters('clusterName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('tags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentityName'))]",
+        "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsName'))]"
+      ],
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentityName'))]": {}
+        }
+      },
+      "sku": {
+        "name": "Base",
+        "tier": "Free"
+      },
+      "properties": {
+        "kubernetesVersion": "[parameters('kubernetesVersion')]",
+        "dnsPrefix": "[parameters('dnsPrefix')]",
+        "enableRBAC": true,
+        "agentPoolProfiles": [
+          {
+            "name": "nodepool1",
+            "mode": "System",
+            "count": "[parameters('nodeCount')]",
+            "vmSize": "[parameters('nodeVmSize')]",
+            "type": "VirtualMachineScaleSets",
+            "osType": "Linux",
+            "osSKU": "Ubuntu",
+            "osDiskType": "Managed",
+            "osDiskSizeGB": 30,
+            "maxPods": 30,
+            "enableAutoScaling": false,
+            "enableNodePublicIP": false,
+            "enableEncryptionAtHost": false,
+            "enableUltraSSD": false
+          }
+        ],
+        "networkProfile": {
+          "networkPlugin": "kubenet",
+          "loadBalancerSku": "standard",
+          "networkPolicy": "none",
+          "podCidr": "10.244.0.0/16",
+          "serviceCidr": "10.0.0.0/16",
+          "dnsServiceIP": "10.0.0.10"
+        },
+        "addonProfiles": {
+          "azureKeyvaultSecretsProvider": {
+            "enabled": false
+          },
+          "azurepolicy": {
+            "enabled": false
+          },
+          "httpApplicationRouting": {
+            "enabled": false
+          },
+          "omsagent": {
+            "enabled": true,
+            "config": {
+              "logAnalyticsWorkspaceResourceID": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsName'))]"
+            }
+          }
+        },
+        "securityProfile": {
+          "workloadIdentity": {
+            "enabled": true
+          }
+        },
+        "apiServerAccessProfile": {
+          "enablePrivateCluster": false,
+          "authorizedIPRanges": []
+        },
+        "autoUpgradeProfile": {
+          "upgradeChannel": "patch",
+          "nodeOSUpgradeChannel": "NodeImage"
+        },
+        "oidcIssuerProfile": {
+          "enabled": true
+        },
+        "disableLocalAccounts": false,
+        "enablePodSecurityPolicy": false,
+        "storageProfile": {
+          "diskCSIDriver": {
+            "enabled": true
+          },
+          "fileCSIDriver": {
+            "enabled": false
+          },
+          "snapshotController": {
+            "enabled": false
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(resourceGroup().id, variables('managedIdentityName'), 'acrpull')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentityName'))]"
+      ],
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
+        "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentityName'))).principalId]",
+        "principalType": "ServicePrincipal"
+      }
+    }
+  ],
+  "outputs": {
+    "aksClusterId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.ContainerService/managedClusters', parameters('clusterName'))]",
+      "metadata": {
+        "description": "The resource ID of the AKS cluster"
+      }
+    },
+    "aksClusterName": {
+      "type": "string",
+      "value": "[parameters('clusterName')]",
+      "metadata": {
+        "description": "The name of the AKS cluster"
+      }
+    },
+    "aksClusterFqdn": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', parameters('clusterName'))).fqdn]",
+      "metadata": {
+        "description": "The FQDN of the AKS cluster"
+      }
+    },
+    "managedIdentityId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentityName'))]",
+      "metadata": {
+        "description": "The managed identity resource ID"
+      }
+    },
+    "logAnalyticsWorkspaceId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsName'))]",
+      "metadata": {
+        "description": "The Log Analytics workspace ID"
+      }
+    },
+    "portalUrl": {
+      "type": "string",
+      "value": "[concat('https://portal.azure.com/#resource', resourceId('Microsoft.ContainerService/managedClusters', parameters('clusterName')), '/overview')]",
+      "metadata": {
+        "description": "Azure portal URL for the AKS cluster"
+      }
+    },
+    "kubectlConnectCommand": {
+      "type": "string",
+      "value": "[concat('az aks get-credentials --resource-group ', resourceGroup().name, ' --name ', parameters('clusterName'))]",
+      "metadata": {
+        "description": "Connection commands for kubectl"
+      }
+    }
+  }
+}

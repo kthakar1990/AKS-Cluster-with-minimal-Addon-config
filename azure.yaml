@@ -1,0 +1,42 @@
+# Azure Developer CLI Configuration for Minimal Spec AKS Cluster
+name: minimal-spec-aks
+metadata:
+  template: minimal-spec-aks@0.0.1-beta
+
+# Services configuration - no application services for infrastructure-only deployment
+services: {}
+
+# Infrastructure configuration
+infrastructure:
+  provider: bicep
+  path: infra
+
+# Deployment pipeline configuration
+pipeline:
+  provider: github
+  path: .github/workflows
+
+# Monitoring and observability
+monitor:
+  provider: azure-monitor
+  
+# Environment configuration
+environments:
+  dev:
+    services:
+      # No services defined for infrastructure template
+  test:
+    services:
+      # No services defined for infrastructure template  
+  prod:
+    services:
+      # No services defined for infrastructure template
+
+# Resource naming convention
+resourceToken: "#{AZURE_RESOURCE_TOKEN}"
+
+# Tags applied to all resources
+tags:
+  purpose: "minimal-aks-cluster"
+  template: "minimal-spec-aks"
+  cost-optimized: "true"
