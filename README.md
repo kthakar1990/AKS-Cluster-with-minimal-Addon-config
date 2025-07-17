@@ -16,11 +16,12 @@ This template creates the most minimal AKS cluster possible while maintaining ba
 
 ## 💰 Cost Optimization
 
-- **Estimated monthly cost**: $70-90 USD (VM + storage only)
+- **Estimated monthly cost**: $45-75 USD (varies by configuration)
 - **Free control plane**: No management fees
+- **Ephemeral disk**: 30-40% cheaper than managed disks
 - **Single node**: Minimal compute costs  
 - **Basic networking**: No premium networking charges
-- **Optional monitoring**: Can be disabled to save costs
+- **Optional monitoring**: Can be disabled to save $20-30/month
 
 ## 🚀 Quick Start
 
@@ -62,6 +63,9 @@ azd up
 | `nodeCount` | `1` | Number of nodes (1-3) |
 | `enableWorkloadIdentity` | `false` | Enable workload identity |
 | `enableMonitoring` | `false` | Enable Log Analytics monitoring |
+| `osDiskType` | `Ephemeral` | OS disk type (Ephemeral/Managed) |
+
+📋 **[Feature Selection Guide](FEATURE-SELECTION-GUIDE.md)** - Detailed cost analysis and recommendations for each feature.
 
 ### Truly Minimal Configuration
 
@@ -71,6 +75,7 @@ For the absolute minimal cluster (lowest cost):
 {
   "enableWorkloadIdentity": false,
   "enableMonitoring": false,
+  "osDiskType": "Ephemeral",
   "nodeCount": 1
 }
 ```

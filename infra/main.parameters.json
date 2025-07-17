@@ -28,6 +28,9 @@
     },
     "enableMonitoring": {
       "value": false
+    },
+    "osDiskType": {
+      "value": "Ephemeral"
     }
   }
 }

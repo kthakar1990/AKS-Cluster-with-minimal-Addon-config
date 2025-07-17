@@ -51,6 +51,13 @@ param enableWorkloadIdentity bool = false
 @description('Enable monitoring with Log Analytics (adds cost but provides observability)')
 param enableMonitoring bool = false
 
+@description('OS disk type: Ephemeral (cheaper, faster) or Managed (persistent)')
+@allowed([
+  'Ephemeral'
+  'Managed'
+])
+param osDiskType string = 'Ephemeral'
+
 // Variables for resource configuration
 var resourceToken = toLower(uniqueString(subscription().id, resourceGroup().id, environmentName))
 var tags = {
@@ -98,8 +105,8 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-09-01' = {
         type: 'VirtualMachineScaleSets'
         osType: 'Linux'
         osSKU: 'Ubuntu'
-        osDiskType: 'Managed'
-        osDiskSizeGB: 30 // Minimal OS disk size
+        osDiskType: osDiskType
+        osDiskSizeGB: osDiskType == 'Ephemeral' ? 0 : 30 // 0 for ephemeral (uses VM cache), 30GB for managed
         maxPods: 30 // Reduced for minimal spec
         enableAutoScaling: false // Disabled for cost control
         enableNodePublicIP: false
