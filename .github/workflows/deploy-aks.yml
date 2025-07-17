@@ -67,11 +67,6 @@ jobs:
             - 'terraform/**/*.tf'
             - 'terraform/**/*.tfvars'
 
-    - name: Setup Azure CLI
-      uses: azure/CLI@v1
-      with:
-        azcliversion: latest
-
     - name: Azure Login
       uses: azure/login@v1
       with:
