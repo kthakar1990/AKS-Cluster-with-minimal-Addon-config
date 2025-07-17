@@ -40,7 +40,7 @@ This template creates a **minimal 1-node AKS cluster** optimized for cost and le
 ```
 
 **Cost Breakdown:**
-- **Pod Overhead**: OMS agent uses 100m CPU + 200Mi memory per node
+- **Pod Overhead**: OMS agent uses 100m CPU + 200 MiB memory per node
 - **Log Ingestion**: $2-5 per GB (typically 2-10GB/month for dev clusters)
 - **Storage**: Log Analytics workspace storage costs
 - **Total Impact**: $15-35/month additional cost
@@ -108,20 +108,20 @@ This template creates a **minimal 1-node AKS cluster** optimized for cost and le
 
 | Configuration | System Pods | CPU Usage | Memory Usage |
 |---------------|-------------|-----------|--------------|
-| Truly Minimal | 8-10 pods | ~300m | ~500Mi |
-| With Monitoring | 12-14 pods | ~450m | ~750Mi |
-| Full Features | 15-18 pods | ~600m | ~1000Mi |
+| Truly Minimal | 8-10 pods | ~300m | ~500 MiB |
+| With Monitoring | 12-14 pods | ~450m | ~750 MiB |
+| Full Features | 15-18 pods | ~600m | ~1000 MiB |
 
 #### **Feature-by-Feature Resource Impact**
 
 **Log Analytics (OMS Agent):**
 - **Pods Added**: 1 per node (ama-logs)
-- **Resource Usage**: 100m CPU, 200Mi memory per node
+- **Resource Usage**: 100m CPU, 200 MiB memory per node
 - **Storage**: 1-10GB logs/month depending on verbosity
 
 **Workload Identity:**
 - **Pods Added**: 2 webhook pods (azure-wi-webhook-controller-manager)
-- **Resource Usage**: 50m CPU, 64Mi memory per webhook
+- **Resource Usage**: 50m CPU, 64 MiB memory per webhook
 - **Network**: Additional webhook admission controller
 
 ### 🎯 **Recommendations for Engineering Manager**

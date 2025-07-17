@@ -111,7 +111,13 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-09-01' = {
         osType: 'Linux'
         osSKU: 'Ubuntu'
         osDiskType: osDiskType
-        osDiskSizeGB: osDiskType == 'Ephemeral' ? 0 : osDiskSizeGB // 0 for ephemeral (uses VM cache), customizable for managed
+        
+        // OS Disk Size Configuration:
+        // - Ephemeral disks: Set to 0 (Azure automatically uses VM's local cache/temp storage)
+        // - Managed disks: Use the configurable osDiskSizeGB parameter (30-2048 GB)
+        // Ephemeral disks provide faster I/O and cost savings but data is lost on VM restart
+        osDiskSizeGB: osDiskType == 'Ephemeral' ? 0 : osDiskSizeGB
+        
         maxPods: 30 // Reduced for minimal spec
         enableAutoScaling: false // Disabled for cost control
         enableNodePublicIP: false
