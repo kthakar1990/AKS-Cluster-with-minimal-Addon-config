@@ -1,6 +1,6 @@
 # AKS Minimal Cluster - Feature Selection Guide
 
-## � **About This Template**
+## 📄 **About This Template**
 
 This template creates a **minimal 1-node AKS cluster** optimized for cost and learning. The production cost estimates below represent **scaled configurations** that you would configure after initial deployment by:
 - Adding more node pools
