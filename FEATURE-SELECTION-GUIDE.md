@@ -1,15 +1,28 @@
 # AKS Minimal Cluster - Feature Selection Guide
 
-## 📋 Decision Matrix: Which Features to Enable?
+## � **About This Template**
+
+This template creates a **minimal 1-node AKS cluster** optimized for cost and learning. The production cost estimates below represent **scaled configurations** that you would configure after initial deployment by:
+- Adding more node pools
+- Scaling existing node pools  
+- Adding additional Azure services (Application Gateway, etc.)
+
+**Template Default:** 1 node, ephemeral disk, no monitoring = **$45-55/month**
+
+## �📋 Decision Matrix: Which Features to Enable?
 
 ### 🎯 **Use Case Based Feature Selection**
 
-| Use Case | Monitoring | Workload Identity | OS Disk Type | Estimated Cost | When to Use |
-|----------|------------|-------------------|--------------|----------------|-------------|
-| **Learning/Lab** | ❌ Disabled | ❌ Disabled | Ephemeral | $45-55/month | Learning AKS, tutorials |
-| **Development** | ✅ Enabled | ❌ Disabled | Ephemeral | $65-75/month | App development, testing |
-| **Pre-Production** | ✅ Enabled | ✅ Enabled | Managed | $85-95/month | Integration testing |
-| **Production** | ✅ Enabled | ✅ Enabled | Managed | $150-200/month | Live workloads |
+> **Note:** This template creates a **minimal 1-node cluster** by default. Production estimates below represent **scaled configurations** that you would configure after initial deployment.
+
+| Use Case | Monitoring | Workload Identity | OS Disk Type | Nodes | Estimated Cost | When to Use |
+|----------|------------|-------------------|--------------|-------|----------------|-------------|
+| **Learning/Lab** | ❌ Disabled | ❌ Disabled | Ephemeral | 1 | $45-55/month | Learning AKS, tutorials |
+| **Development** | ✅ Enabled | ❌ Disabled | Ephemeral | 1 | $65-75/month | App development, testing |
+| **Pre-Production** | ✅ Enabled | ✅ Enabled | Managed | 1-2 | $85-120/month | Integration testing |
+| **Production** | ✅ Enabled | ✅ Enabled | Managed | 3+ | $150-300/month | Live workloads (scaled) |
+
+> **Production Scaling Note:** The template's `nodeCount` parameter max is 3, but production workloads typically require additional node pools, load balancers, and services that increase costs beyond the minimal template scope.
 
 ### 💰 **Cost Impact Analysis**
 

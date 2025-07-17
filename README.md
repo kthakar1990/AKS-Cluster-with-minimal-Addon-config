@@ -16,12 +16,16 @@ This template creates the most minimal AKS cluster possible while maintaining ba
 
 ## 💰 Cost Optimization
 
-- **Estimated monthly cost**: $45-75 USD (varies by configuration)
+- **Template default cost**: $45-55 USD/month (1 node, ephemeral disk, no monitoring)
+- **With monitoring enabled**: $65-75 USD/month  
+- **Scaled for production**: $150-300 USD/month (3+ nodes, additional services)
 - **Free control plane**: No management fees
 - **Ephemeral disk**: 30-40% cheaper than managed disks
-- **Single node**: Minimal compute costs  
+- **Single node start**: Minimal compute costs, scale as needed
 - **Basic networking**: No premium networking charges
 - **Optional monitoring**: Can be disabled to save $20-30/month
+
+📋 **[Feature Selection Guide](FEATURE-SELECTION-GUIDE.md)** - Detailed cost analysis and scaling guidance.
 
 ## 🚀 Quick Start
 
