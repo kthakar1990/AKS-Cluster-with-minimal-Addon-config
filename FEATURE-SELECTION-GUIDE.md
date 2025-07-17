@@ -41,7 +41,7 @@ This template creates a **minimal 1-node AKS cluster** optimized for cost and le
 
 **Cost Breakdown:**
 - **Pod Overhead**: OMS agent uses 100m CPU + 200 MiB memory per node
-- **Log Ingestion**: $2-5 per GB (typically 2-10GB/month for dev clusters)
+- **Log Ingestion**: $2.76 per GB (typically 2-10GB/month for dev clusters)
 - **Storage**: Log Analytics workspace storage costs
 - **Total Impact**: $15-35/month additional cost
 
