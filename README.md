@@ -64,6 +64,7 @@ azd up
 | `enableWorkloadIdentity` | `false` | Enable workload identity |
 | `enableMonitoring` | `false` | Enable Log Analytics monitoring |
 | `osDiskType` | `Ephemeral` | OS disk type (Ephemeral/Managed) |
+| `osDiskSizeGB` | `30` | OS disk size in GB (managed disks only) |
 
 📋 **[Feature Selection Guide](FEATURE-SELECTION-GUIDE.md)** - Detailed cost analysis and recommendations for each feature.
 
@@ -76,6 +77,7 @@ For the absolute minimal cluster (lowest cost):
   "enableWorkloadIdentity": false,
   "enableMonitoring": false,
   "osDiskType": "Ephemeral",
+  "osDiskSizeGB": 30,
   "nodeCount": 1
 }
 ```

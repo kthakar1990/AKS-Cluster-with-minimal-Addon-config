@@ -58,6 +58,11 @@ param enableMonitoring bool = false
 ])
 param osDiskType string = 'Ephemeral'
 
+@description('OS disk size in GB for managed disks (ignored for ephemeral)')
+@minValue(30)
+@maxValue(2048)
+param osDiskSizeGB int = 30
+
 // Variables for resource configuration
 var resourceToken = toLower(uniqueString(subscription().id, resourceGroup().id, environmentName))
 var tags = {
