@@ -106,7 +106,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-09-01' = {
         osType: 'Linux'
         osSKU: 'Ubuntu'
         osDiskType: osDiskType
-        osDiskSizeGB: osDiskType == 'Ephemeral' ? 0 : 30 // 0 for ephemeral (uses VM cache), 30GB for managed
+        osDiskSizeGB: osDiskType == 'Ephemeral' ? 0 : osDiskSizeGB // 0 for ephemeral (uses VM cache), customizable for managed
         maxPods: 30 // Reduced for minimal spec
         enableAutoScaling: false // Disabled for cost control
         enableNodePublicIP: false
