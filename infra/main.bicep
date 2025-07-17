@@ -114,7 +114,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-09-01' = {
         
         // OS Disk Size Configuration:
         // - Ephemeral disks: Set to 0. This instructs Azure to automatically size the disk based on the VM's cache capacity,
-        //   optimizing for faster I/O and cost savings. Note that data is lost on VM restart.
+        //   which is determined by the VM size. This configuration optimizes for faster I/O and cost savings. Note that data is lost on VM restart.
         // - Managed disks: Use the configurable osDiskSizeGB parameter (30-2048 GB) for persistent storage.
         osDiskSizeGB: osDiskType == 'Ephemeral' ? 0 : osDiskSizeGB
         
