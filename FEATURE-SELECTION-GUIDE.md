@@ -9,7 +9,7 @@ This template creates a **minimal 1-node AKS cluster** optimized for cost and le
 
 **Template Default:** 1 node, ephemeral disk, no monitoring = **$45-55/month**
 
-## �📋 Decision Matrix: Which Features to Enable?
+## 📋 Decision Matrix: Which Features to Enable?
 
 ### 🎯 **Use Case Based Feature Selection**
 
