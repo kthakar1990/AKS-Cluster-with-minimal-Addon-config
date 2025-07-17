@@ -174,6 +174,6 @@ The Log Analytics workspace creates several cost components:
 
 **Typical Usage:**
 - **Dev Cluster**: 2-5GB logs/month = $0/month (within free tier)
-- **Busy Dev Cluster**: 5-15GB logs/month = $15-45/month (first 5GB free, additional usage billed at $2.76/GB)
+- **Busy Dev Cluster**: 5-15GB logs/month = $0-27.60/month (first 5GB free, additional usage billed at $2.76/GB)
 
 This analysis shows why the template defaults to `enableMonitoring: false` for true cost minimization while providing the option to enable when observability is needed.
