@@ -4,7 +4,7 @@
 
 This template creates a **minimal 1-node AKS cluster** optimized for cost and learning. The production cost estimates below represent **scaled configurations** that you would configure after initial deployment by:
 - Adding more node pools
-- Scaling existing node pools  
+- Scaling existing node pools
 - Adding additional Azure services (Application Gateway, etc.)
 
 **Template Default:** 1 node, ephemeral disk, no monitoring = **$45-55/month**

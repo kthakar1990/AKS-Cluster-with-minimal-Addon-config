@@ -8,16 +8,16 @@ This sample demonstrates how to deploy a truly minimal specification Azure Kuber
 
 This template creates the most minimal AKS cluster possible while maintaining basic functionality:
 
-- **Single node** with smallest available VM size  
-- **Free tier control plane** (no management fees)  
-- **Basic kubenet networking** (no Azure CNI charges)  
-- **Minimal add-ons** (optional monitoring and workload identity)  
-- **Cost-optimized settings** throughout  
+- **Single node** with smallest available VM size
+- **Free tier control plane** (no management fees)
+- **Basic kubenet networking** (no Azure CNI charges)
+- **Minimal add-ons** (optional monitoring and workload identity)
+- **Cost-optimized settings** throughout
 
 ## 💰 Cost Optimization
 
 - **Template default cost**: $45-55 USD/month (1 node, ephemeral disk, no monitoring)
-- **With monitoring enabled**: $65-75 USD/month  
+- **With monitoring enabled**: $65-75 USD/month
 - **Scaled for production**: $150-300 USD/month (3+ nodes, additional services)
 - **Free control plane**: No management fees
 - **Ephemeral disk**: 30-40% cheaper than managed disks
@@ -106,7 +106,7 @@ kubectl get pods
 ## 🔒 Security Features
 
 - ✅ **RBAC enabled** by default
-- ✅ **Managed identity** for secure authentication  
+- ✅ **Managed identity** for secure authentication
 - ✅ **Optional workload identity** for pod-level security
 - ⚠️ **Azure Policy** disabled (enable if compliance required)
 
@@ -128,7 +128,7 @@ kubectl get pods
 ### Explicitly Disabled
 
 - Azure Policy/Gatekeeper
-- Azure Key Vault Secrets Provider  
+- Azure Key Vault Secrets Provider
 - Auto-scaling (can be enabled later)
 - Premium networking features
 
