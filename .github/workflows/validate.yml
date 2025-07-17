@@ -76,20 +76,16 @@ jobs:
       run: |
         echo "Validating Azure Developer CLI configuration..."
         if [ -f "azure.yaml" ]; then
-          # Basic YAML syntax check
-          python -c "
-            import yaml
-            try:
-              with open('azure.yaml', 'r') as file:
-                yaml.safe_load(file)
-              print('✅ azure.yaml is valid YAML')
-            except FileNotFoundError:
-              print('❌ azure.yaml file not found')
-              exit(1)
-            except yaml.YAMLError as e:
-              print(f'❌ Invalid YAML syntax in azure.yaml: {e}')
-              exit(1)
-          "
+          # Basic YAML syntax check using built-in tools
+          if python -c "import yaml; yaml.safe_load(open('azure.yaml'))"; then
+            echo "✅ azure.yaml is valid YAML"
+          else
+            echo "❌ Invalid YAML syntax in azure.yaml"
+            exit 1
+          fi
+        else
+          echo "❌ azure.yaml file not found"
+          exit 1
         fi
 
     - name: Summary
