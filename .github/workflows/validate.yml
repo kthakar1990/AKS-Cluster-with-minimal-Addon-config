@@ -45,7 +45,7 @@ jobs:
         echo "Validating Bicep templates..."
         cd infra
         # Syntax validation only (no Azure connection required)
-        az bicep build --file main.bicep --outfile /dev/null
+        az bicep build --file main.bicep --outfile /dev/null --parameters main.parameters.json
         echo "✅ Bicep template syntax is valid"
 
     - name: Check file permissions and structure
