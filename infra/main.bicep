@@ -58,6 +58,11 @@ param enableMonitoring bool = false
 ])
 param osDiskType string = 'Ephemeral'
 
+@description('OS disk size in GB for managed disks (ignored for ephemeral)')
+@minValue(30)
+@maxValue(2048)
+param osDiskSizeGB int = 30
+
 // Variables for resource configuration
 var resourceToken = toLower(uniqueString(subscription().id, resourceGroup().id, environmentName))
 var tags = {
@@ -106,7 +111,13 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-09-01' = {
         osType: 'Linux'
         osSKU: 'Ubuntu'
         osDiskType: osDiskType
-        osDiskSizeGB: osDiskType == 'Ephemeral' ? 0 : 30 // 0 for ephemeral (uses VM cache), 30GB for managed
+        
+        // OS Disk Size Configuration:
+        // - Ephemeral disks: Set to 0 (Azure automatically sizes the disk based on the VM's cache capacity)
+        // - Managed disks: Use the configurable osDiskSizeGB parameter (30-2048 GB)
+        // Ephemeral disks provide faster I/O and cost savings but data is lost on VM restart
+        osDiskSizeGB: osDiskType == 'Ephemeral' ? 0 : osDiskSizeGB
+        
         maxPods: 30 // Reduced for minimal spec
         enableAutoScaling: false // Disabled for cost control
         enableNodePublicIP: false

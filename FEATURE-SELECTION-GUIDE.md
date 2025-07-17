@@ -1,15 +1,28 @@
 # AKS Minimal Cluster - Feature Selection Guide
 
+## 📄 **About This Template**
+
+This template creates a **minimal 1-node AKS cluster** optimized for cost and learning. The production cost estimates below represent **scaled configurations** that you would configure after initial deployment by:
+- Adding more node pools
+- Scaling existing node pools
+- Adding additional Azure services (Application Gateway, etc.)
+
+**Template Default:** 1 node, ephemeral disk, no monitoring = **$45-55/month**
+
 ## 📋 Decision Matrix: Which Features to Enable?
 
 ### 🎯 **Use Case Based Feature Selection**
 
-| Use Case | Monitoring | Workload Identity | OS Disk Type | Estimated Cost | When to Use |
-|----------|------------|-------------------|--------------|----------------|-------------|
-| **Learning/Lab** | ❌ Disabled | ❌ Disabled | Ephemeral | $45-55/month | Learning AKS, tutorials |
-| **Development** | ✅ Enabled | ❌ Disabled | Ephemeral | $65-75/month | App development, testing |
-| **Pre-Production** | ✅ Enabled | ✅ Enabled | Managed | $85-95/month | Integration testing |
-| **Production** | ✅ Enabled | ✅ Enabled | Managed | $95-110/month | Live workloads |
+> **Note:** This template creates a **minimal 1-node cluster** by default. Production estimates below represent **scaled configurations** that you would configure after initial deployment.
+
+| Use Case | Monitoring | Workload Identity | OS Disk Type | Nodes | Estimated Cost | When to Use |
+|----------|------------|-------------------|--------------|-------|----------------|-------------|
+| **Learning/Lab** | ❌ Disabled | ❌ Disabled | Ephemeral | 1 | $45-55/month | Learning AKS, tutorials |
+| **Development** | ✅ Enabled | ❌ Disabled | Ephemeral | 1 | $65-75/month | App development, testing |
+| **Pre-Production** | ✅ Enabled | ✅ Enabled | Managed | 1-2 | $85-120/month | Integration testing |
+| **Production** | ✅ Enabled | ✅ Enabled | Managed | 3+ | $150-300/month | Live workloads (scaled) |
+
+> **Production Scaling Note:** The template's `nodeCount` parameter max is 3, but production workloads typically require additional node pools, load balancers, and services that increase costs beyond the minimal template scope.
 
 ### 💰 **Cost Impact Analysis**
 
@@ -27,8 +40,8 @@
 ```
 
 **Cost Breakdown:**
-- **Pod Overhead**: OMS agent uses 100m CPU + 200Mi memory per node
-- **Log Ingestion**: $2-5 per GB (typically 2-10GB/month for dev clusters)
+- **Pod Overhead**: OMS agent uses 100m CPU + 200 MiB memory per node
+- **Log Ingestion**: $2.76 per GB (typically 2-10GB/month for dev clusters)
 - **Storage**: Log Analytics workspace storage costs
 - **Total Impact**: $15-35/month additional cost
 
@@ -95,20 +108,20 @@
 
 | Configuration | System Pods | CPU Usage | Memory Usage |
 |---------------|-------------|-----------|--------------|
-| Truly Minimal | 8-10 pods | ~300m | ~500Mi |
-| With Monitoring | 12-14 pods | ~450m | ~750Mi |
-| Full Features | 15-18 pods | ~600m | ~1000Mi |
+| Truly Minimal | 8-10 pods | ~300m | ~500 MiB |
+| With Monitoring | 12-14 pods | ~450m | ~750 MiB |
+| Full Features | 15-18 pods | ~600m | ~1000 MiB |
 
 #### **Feature-by-Feature Resource Impact**
 
 **Log Analytics (OMS Agent):**
 - **Pods Added**: 1 per node (ama-logs)
-- **Resource Usage**: 100m CPU, 200Mi memory per node
+- **Resource Usage**: 100m CPU, 200 MiB memory per node
 - **Storage**: 1-10GB logs/month depending on verbosity
 
 **Workload Identity:**
 - **Pods Added**: 2 webhook pods (azure-wi-webhook-controller-manager)
-- **Resource Usage**: 50m CPU, 64Mi memory per webhook
+- **Resource Usage**: 50m CPU, 64 MiB memory per webhook
 - **Network**: Additional webhook admission controller
 
 ### 🎯 **Recommendations for Engineering Manager**
@@ -160,7 +173,7 @@ The Log Analytics workspace creates several cost components:
 - **Complexity**: Additional monitoring infrastructure to manage
 
 **Typical Usage:**
-- **Dev Cluster**: 2-5GB logs/month = $5-15/month
-- **Busy Dev Cluster**: 5-15GB logs/month = $15-45/month
+- **Dev Cluster**: 2-5GB logs/month = $0/month (within free tier)
+- **Busy Dev Cluster**: 5-15GB logs/month = $15-45/month (first 5GB free, additional usage billed at $2.76/GB)
 
 This analysis shows why the template defaults to `enableMonitoring: false` for true cost minimization while providing the option to enable when observability is needed.
