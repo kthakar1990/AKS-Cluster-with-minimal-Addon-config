@@ -9,7 +9,7 @@
 | **Learning/Lab** | ❌ Disabled | ❌ Disabled | Ephemeral | $45-55/month | Learning AKS, tutorials |
 | **Development** | ✅ Enabled | ❌ Disabled | Ephemeral | $65-75/month | App development, testing |
 | **Pre-Production** | ✅ Enabled | ✅ Enabled | Managed | $85-95/month | Integration testing |
-| **Production** | ✅ Enabled | ✅ Enabled | Managed | $95-110/month | Live workloads |
+| **Production** | ✅ Enabled | ✅ Enabled | Managed | $150-200/month | Live workloads |
 
 ### 💰 **Cost Impact Analysis**
 
